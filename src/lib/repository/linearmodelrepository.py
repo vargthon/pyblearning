@@ -21,3 +21,6 @@ class LinearModelRepository():
             company_id=model.company.cod,valid_from=model.valid_from, 
             valid_to=model.valid_to, model=model.model ))
         self.dbconn.close()
+
+    def load(self, model_id):
+        
