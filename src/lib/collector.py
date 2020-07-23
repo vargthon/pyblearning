@@ -25,22 +25,22 @@ class Collector:
       cursor.execute(
             """ 
             select 
-              d.year_actual,
-              d.month_actual,
+              d.year,
+              d.month,
               f.id_produto,
               sum(f.quantidade) as quantidade
             from 
               fact_sales_by_product as f, dim.date as d
             where 
-              f.date_id = d.id
+              f.date_id = d.date_id
               and f.id_produto = '{0}'
               and f.id_empresa = '{1}'
               and f.date_id < '20200701'
               
             group by 
-              d.year_actual, d.month_actual, f.id_produto
+              d.year, d.month, f.id_produto
             order by
-            d.year_actual , d.month_actual           
+            d.year , d.month          
           """.format(produto, empresa, '2020', '06')
       )
 
