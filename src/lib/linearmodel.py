@@ -12,7 +12,8 @@ import codecs
 
 class LinearModel():
     
-    def __init__(self, product={}, company={} , model=LinearRegression(), params=[], valid_from=(datetime.now().timestamp()), valid_to=None):
+    def __init__(self, id=0,product={}, company={} , model=LinearRegression(), params=[], valid_from=(datetime.now().timestamp()), valid_to=None):
+        self.id = id
         self.model = model
         self.params = params
         self.valid_from = valid_from 
