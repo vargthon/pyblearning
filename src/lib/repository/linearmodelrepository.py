@@ -28,6 +28,4 @@ class LinearModelRepository():
             print(error)
         self.dbconn.close()
 
-    def load_model(self, model_id):
-        return None
 
