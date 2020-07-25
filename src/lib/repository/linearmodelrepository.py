@@ -30,7 +30,7 @@ class LinearModelRepository():
         finally:
             self.dbconn.close()
 
-    def load_valid(self):
+    def load_valid(self, product_id, company_id):
         SQL =  """ 
             SELECT 
                 product_id,
@@ -44,13 +44,15 @@ class LinearModelRepository():
                 linear_model
             WHERE 
                 valid_to is null  
+                and company_id='{company_id}'
+                and product_id='{product_id}'
 			order by id desc
             limit 1
         """ 
         try:
             self.dbconn.create_connection()
             cursor = self.dbconn.conn.cursor()
-            cursor.execute(SQL)
+            cursor.execute(SQL.format(company_id=company_id,product_id=product_id))
             model = LinearModel()
             for record in cursor.fetchall():
                 model.params = record[3]
