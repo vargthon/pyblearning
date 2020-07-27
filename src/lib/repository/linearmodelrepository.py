@@ -103,3 +103,25 @@ class LinearModelRepository():
             print(error)
         finally:
             cursor.close()
+    
+    def update(self, model):
+        params_list = str(model.params)
+        params = params_list.replace('[','{').replace(']','}').replace('\'','\"')
+        SQL = """ 
+            UPDATE linear_model SET 
+                valid_to = '{valid_to}',
+                model = '{model}',
+                valid_from = '{valid_from}',
+                params='{params}'         
+            WHERE
+                id = {id}
+        """
+        try:
+            self.dbconn.create_connection()
+            self.dbconn.conn.cursor().execute(SQL.format(valid_to=datetime.fromtimestamp(model.valid_to),
+             id=model.id, model= model.encoded, valid_from=model.valid_from, params=params ))
+            self.dbconn.conn.commit()
+        except Exception as error:
+            print(error)
+        finally:
+            self.dbconn.close()

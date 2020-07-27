@@ -7,12 +7,13 @@ Created on Thu Jul  9 10:11:13 2020
 """
 from datetime import datetime
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 import pickle
 import codecs
 
 class LinearModel():
     
-    def __init__(self, id=0,product={}, company={} , model=LinearRegression(), params=[], valid_from=(datetime.now().timestamp()), valid_to=None):
+    def __init__(self, id=0,product={}, company={} , model=LinearRegression(), error=0, params=[], valid_from=(datetime.now().timestamp()), valid_to=None):
         self.id = id
         self.model = model
         self.params = params
@@ -20,6 +21,7 @@ class LinearModel():
         self.valid_to = valid_to 
         self.product = product
         self.company = company
+        self.error = error
     
     @property
     def model(self):
