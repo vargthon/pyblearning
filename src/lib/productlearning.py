@@ -13,22 +13,37 @@ import pickle
 from sklearn.linear_model import LinearRegression
 from datetime import datetime
 from lib.linearmodel import LinearModel
+from lib.repository.linearmodelrepository import LinearModelRepository
 class ProductLearning():
     
     def __init__(self):
         self.collector = Collector()
         self.normalize = Normalizer()
-        self.model = LinearModel()
-        self.product = {}
-        self.company = {}
+
+    
+    def load_linear(self, company, product):
+        repository = LinearModelRepository()
+        model = repository.load_valid(product,company)
+        if len(model.params) > 0:
+            model = model
+            product = model.product
+            company = model.company 
+        else:
+            model = self.fit_linear_monthly_product(product,company)
+            model.company = {"cod": company}
+            model.product = {"cod": product}
+            repository.save(model)
         
+        return model 
+    
             
     def fit_linear_monthly_product(self, codigoProduto, codigoFilial, features=[],target=None):
-        self.company = {"cod": codigoFilial}
+        company = {"cod": codigoFilial}
         df = self.collector.colector_mes(codigoProduto, codigoFilial)
         df = self.normalize.normalizar(df)
+        model = LinearModel()
         if df.size > 0:
-            self.product = {
+            product = {
                    "cod": df.loc[0,"KEY:PRODUTO:CODIGO"]
                 }
         real_params = []
@@ -44,9 +59,11 @@ class ProductLearning():
         X = df[real_params].values
         y = df['METRIC:QTD'].values
         if df.size != 0:
-            self.model.fit(X,y)
-            self.model.params = real_params
+            model.fit(X,y)
+            model.params = real_params
             #self.model = self.regression#pickle.dumps(self.regression)
+        
+        return model
     
 
         

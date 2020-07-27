@@ -125,3 +125,9 @@ class LinearModelRepository():
             print(error)
         finally:
             self.dbconn.close()
+
+    def finish_model(self, model):
+        now = datetime.now().timestamp()
+        model.valid_to = now 
+        self.update(model)
+        
