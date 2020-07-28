@@ -10,10 +10,12 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 import pickle
 import codecs
-
+from lib.period import Period 
 class LinearModel():
     
-    def __init__(self, id=0,product={}, company={} , model=LinearRegression(), error=0, params=[], valid_from=(datetime.now().timestamp()), valid_to=None):
+    def __init__(self, id=0,product={}, company={} , model=LinearRegression(), error=0, params=[], 
+        valid_from=(datetime.now().timestamp()), valid_to=None, period=Period.MONTHLY, training_date_from=(datetime.now().timestamp()), 
+        training_date_to=(datetime.now().timestamp()) ):
         self.id = id
         self.model = model
         self.params = params
@@ -22,6 +24,9 @@ class LinearModel():
         self.product = product
         self.company = company
         self.error = error
+        self.period = period 
+        self.training_date_from = training_date_from
+        self.training_date_to = training_date_to
     
     @property
     def model(self):
@@ -42,6 +47,9 @@ class LinearModel():
     def to_dict(self):
         return {
             "linear_model": self.encoded,
+            "training_date_from": self.training_date_from,
+            "training_date_to": self.training_date_to,
+            "period": self.period,
             "valid_from": self.valid_from,
             "valid_to": self.valid_to,
             "product": self.product,

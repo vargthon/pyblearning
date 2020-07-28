@@ -14,6 +14,7 @@ from sklearn.linear_model import LinearRegression
 from datetime import datetime
 from lib.linearmodel import LinearModel
 from lib.repository.linearmodelrepository import LinearModelRepository
+from lib.period import Period
 class ProductLearning():
     
     def __init__(self):
@@ -29,7 +30,7 @@ class ProductLearning():
             product = model.product
             company = model.company 
         else:
-            model = self.fit_linear_monthly_product(product,company)
+            model = self.fit_linear_product(product,company)
             model.company = {"cod": company}
             model.product = {"cod": product}
             repository.save(model)
@@ -37,7 +38,8 @@ class ProductLearning():
         return model 
     
             
-    def fit_linear_monthly_product(self, codigoProduto, codigoFilial, features=[],target=None):
+    def fit_linear_product(self, codigoProduto, codigoFilial, features=[],target=None, training_date_from=datetime.now().timestamp(),
+        training_date_to=datetime.now().timestamp(), period=Period.MONTHLY):
         company = {"cod": codigoFilial}
         df = self.collector.colector_mes(codigoProduto, codigoFilial)
         df = self.normalize.normalizar(df)
@@ -61,6 +63,9 @@ class ProductLearning():
         if df.size != 0:
             model.fit(X,y)
             model.params = real_params
+            model.training_date_from = training_date_from
+            model.training_date_to = training_date_to
+            model.period = period
             #self.model = self.regression#pickle.dumps(self.regression)
         
         return model

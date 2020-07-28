@@ -15,15 +15,20 @@ class LinearModelRepository():
                 params, 
                 valid_from, 
                 valid_to, 
-                model)
+                model,
+                training_date_from,
+                training_date_to,
+                period
+                )
             VALUES
-            ('{product_id}', '{company_id}','{params}', '{valid_from}', NULL, '{model}')
+            ('{product_id}', '{company_id}','{params}', '{valid_from}', NULL, '{model}', '{training_date_from}','{training_date_to}',{period})
         """
         try:
             self.dbconn.create_connection()
             self.dbconn.conn.cursor().execute(SQL.format(product_id=model.product["cod"], 
                 company_id=model.company["cod"],valid_from=datetime.fromtimestamp(model.valid_from), 
-                valid_to=model.valid_to, model=model.encoded, params=params ))
+                valid_to=model.valid_to, model=model.encoded, params=params, training_date_from=datetime.fromtimestamp(model.training_date_from),
+                training_date_to=datetime.fromtimestamp(model.training_date_to), period=model.period.value ))
             self.dbconn.conn.commit()
         except Exception as error:
             print(error)
