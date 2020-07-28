@@ -22,9 +22,9 @@ class ProductLearning():
         self.normalize = Normalizer()
 
     
-    def load_linear(self, company, product):
+    def load_linear(self, company, product, period):
         repository = LinearModelRepository()
-        model = repository.load_valid(product,company)
+        model = repository.load_valid(product,company, period.value)
         if len(model.params) > 0:
             model = model
             product = model.product

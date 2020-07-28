@@ -1,6 +1,7 @@
 from lib.repository.dbconnection import DBConnection
 from lib.linearmodel import LinearModel
 from datetime import datetime
+from lib.period import Period
 class LinearModelRepository():
     def __init__(self):
         self.dbconn = DBConnection()
@@ -35,7 +36,7 @@ class LinearModelRepository():
         finally:
             self.dbconn.close()
 
-    def load_valid(self, product_id, company_id):
+    def load_valid(self, product_id, company_id, period):
         SQL =  """ 
             SELECT 
                 product_id,
@@ -44,20 +45,24 @@ class LinearModelRepository():
                 params,
                 valid_from,
                 valid_to,
-                id
+                id,
+                training_date_from,
+                training_date_to,
+                period
             FROM 
                 linear_model
             WHERE 
                 valid_to is null  
                 and company_id='{company_id}'
                 and product_id='{product_id}'
+                and period={period}
 			order by id desc
             limit 1
         """ 
         try:
             self.dbconn.create_connection()
             cursor = self.dbconn.conn.cursor()
-            cursor.execute(SQL.format(company_id=company_id,product_id=product_id))
+            cursor.execute(SQL.format(company_id=company_id,product_id=product_id, period=period))
             model = LinearModel()
             for record in cursor.fetchall():
                 model.params = record[3]
@@ -67,6 +72,9 @@ class LinearModelRepository():
                 model.valid_from = record[4]
                 model.valid_to = record[5]
                 model.id = record[6]
+                model.training_date_from = record[7]
+                model.training_date_to = record[8]
+                model.period = Period(record[9])
             return model
         except Exception as error:
             print(error)
@@ -82,7 +90,10 @@ class LinearModelRepository():
                 params,
                 valid_from,
                 valid_to,
-                id
+                id,
+                training_date_from,
+                training_date_to,
+                period
             FROM 
                 linear_model
             WHERE 
@@ -102,7 +113,9 @@ class LinearModelRepository():
                 model.valid_from = record[4]
                 model.valid_to = record[5]
                 model.id = record[6]
-            
+                model.training_date_from = record[7]
+                model.training_date_to = record[8]
+                model.period = Period(record[9])       
             return model
         except Exception as error:
             print(error)
