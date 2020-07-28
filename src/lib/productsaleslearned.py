@@ -9,10 +9,10 @@ class ProductSalesLearned():
         self.product = product
         self.company = company
         self.model = None
+        self.product_learning = ProductLearning()
 
     def load_model(self, product, company, period=Period.MONTHLY):
-        learning = ProductLearning()
-        self.model = learning.load_linear(company, product, period)
+        self.model = self.product_learning.load_linear(company, product, period)
 
 
     
