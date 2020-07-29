@@ -1,11 +1,11 @@
 from lib.productlearning import ProductLearning
-from lib.salesproduct import SalesProduct 
-from lib.salescompany import SalesCompany
+from lib.product import Product 
+from lib.company import Company
 from lib.period import Period
 
 class ProductSalesLearned():
 
-    def __init__(self, product=SalesProduct(), company=SalesCompany()):
+    def __init__(self, product=Product(), company=Company()):
         self.product = product
         self.company = company
         self.model = None
